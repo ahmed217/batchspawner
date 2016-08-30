@@ -288,7 +288,10 @@ class BatchSpawnerBase(Spawner):
                 assert self.state_ispending()
             yield gen.sleep(self.startup_poll_interval)
 
-        self.user.server.ip = self.state_gethost()
+        
+        self.user.server.ip = '10.54.50.' + re.search('\d+',self.state_gethost()).group(0) 
+        #the host name does not resolve, thats why this technique 
+        self.log.info('FARUK server ip %s' % self.user.server.ip)
         self.db.commit()
         self.log.info("Notebook server job {0} started at {1}:{2}".format(
                         self.job_id, self.user.server.ip, self.user.server.port)
@@ -386,14 +389,17 @@ class TorqueSpawner(BatchSpawnerRegexStates):
         config=True)
 
     # outputs job id string
-    batch_submit_cmd = Unicode('sudo -E -u {username} qsub', config=True)
+    batch_submit_cmd = Unicode('qsub -u {username} ', config=True)
     # outputs job data XML string
-    batch_query_cmd = Unicode('sudo -E -u {username} qstat -x {job_id}', config=True)
-    batch_cancel_cmd = Unicode('sudo -E -u {username} qdel {job_id}', config=True)
+    batch_query_cmd = Unicode('qstat -u {username} -fx {job_id}', config=True)
+    batch_cancel_cmd = Unicode('qdel {job_id}', config=True)
     # search XML string for job_state - [QH] = pending, R = running, [CE] = done
-    state_pending_re = Unicode(r'<job_state>[QH]</job_state>', config=True)
+    state_pending_re = Unicode(r'<job_state>Q</job_state>', config=True)
+    #state_pending_re = Unicode(r'\s[QH]\s', config=True)
     state_running_re = Unicode(r'<job_state>R</job_state>', config=True)
+    #state_running_re = Unicode(r'\s[R]\s', config=True)
     state_exechost_re = Unicode(r'<exec_host>((?:[\w_-]+\.?)+)/\d+', config=True)
+    #state_exechost_re = Unicode(r'<exec_host>((?:[\w_-]+\.?)+)/\d+', config=True)
 
 class UserEnvMixin:
     """Mixin class that computes values for USER and HOME in the environment passed to
