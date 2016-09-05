@@ -42,8 +42,8 @@ We assume that you have installed anaconda or any virtual local environment with
    ```
 3. Depending on the spawner, additional configuration will likely be needed.
 
-I am posting the configuration here 
 
+I am using the following configuration in UofM HPC.
 
 ### Example minimum configuration
 
