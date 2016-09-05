@@ -24,7 +24,7 @@ We assume that you have installed anaconda or any virtual local environment with
    ```bash 
    $ pip install -e  .
    ```
-   If you don''t actually need an editable version, you can simply run 
+   If you don not actually need an editable version, you can simply run 
       
    ```bash
    $ pip install  https://github.com/farukahmedatgithub/batchspawner.git      (it did not work for me)
