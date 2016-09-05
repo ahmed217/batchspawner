@@ -24,13 +24,14 @@ We assume that you have installed anaconda or any virtual local environment with
    ```bash 
    $ pip install -e  .
    ```
-   If you don not actually need an editable version, you can simply run 
+   If you do not actually need an editable version, you can simply run 
       
    ```bash
    $ pip install  https://github.com/farukahmedatgithub/batchspawner.git      (it did not work for me)
    ```
 3. install jupyterhub from [this link](https://github.com/jupyterhub/jupyterhub) 
 4. generate jupyterhub configuration file (default configuration file name is jupyterhub_config.py)
+   
    ```bash 
    $ jupyterhub --generate-config
    ```
