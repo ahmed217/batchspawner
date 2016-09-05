@@ -1,21 +1,34 @@
 #Modified batchspawner for Jupyterhub [![Build Status](https://travis-ci.org/jupyterhub/batchspawner.svg?branch=master)](https://travis-ci.org/jupyterhub/batchspawner)
 This is a custom spawner for Jupyterhub that is designed for installations on clusters using batch scheduling software. This version of batchspawner is specificly modified to work with [University of Memphis](http://www.memphis.edu/hpc/configuration.php) HPC environment.
 
-This is fork of original [batchspawner](https://github.com/jupyterhub/batchspawner). The target HPC has couple features which made batchspawner not function properly. 
+This is the fork of original [batchspawner](https://github.com/jupyterhub/batchspawner). The target HPC has couple features which made batchspawner not function properly. 
 * The login node does not resolve the computing nodes by dns name and computing nodes do not resolve login node as well
 * The login node and the computing node does not return the job status in XML format, but batchspawner looks for XML  
+* UofM HPC uses torque for resource management.
 
 To address the above features, the modification is made in two places. 
 * Instead of dns names, the nodes are represented by their IP address.
-* In the command of job status, we added force option to return XML status 
+* In the command of job status, we added force option to return XML status. 
 
 This package also includes WrapSpawner and ProfilesSpawner, which provide mechanisms for runtime configuration of spawners. There is no modification yet in this packages. 
 
-##Installation
-1. from root directory of this repo (where setup.py is), run `pip install -e .`
+We assume that you have install anaconda with python version > 3.4.2
 
+##Installation
+1. get the package from github 
+   ```bash 
+   $ git clone git@github.com:farukahmedatgithub/batchspawner.git
+   ```
+
+2. from root directory of this repo (where setup.py is), run i
+   ```bash 
+   pip install -e  .
+   ```
    If you don't actually need an editable version, you can simply run 
-      `pip install https://github.com/mbmilligan/batchspawner`
+      
+   ```bash
+   pip install  https://github.com/farukahmedatgithub/batchspawner.git      (it did not work for me)
+   ```
 
 2. add lines in jupyterhub_config.py for the spawner you intend to use, e.g.
    
