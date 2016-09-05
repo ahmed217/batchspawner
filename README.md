@@ -43,20 +43,27 @@ We assume that you have installed anaconda or any virtual local environment with
 3. Depending on the spawner, additional configuration will likely be needed.
 
 
-I am using the following configuration in UofM HPC.
+Here is the minimum example configuration given. You can copy and save it as jupyterhub_config.py file. For other configuratin parameters it will use the defaults. 
 
-### Example minimum configuration
+### Example configuration
 
 ```python
 
 # Set the log level by value or name.
 c.Application.log_level = 'DEBUG' # 0,10,20.... 
 
-# Allows ahead-of-time generation of API tokens for use by services.
-c.JupyterHub.api_tokens = {'<put your token>':'<put your hpc user name>'}
 
 # The ip for this process
 c.JupyterHub.hub_ip = 'xx.xx.xx.xx' # put your login node ip which is facing towards the computing node
+
+#
+######################################################################################################
+#
+# you may generate a longer random string and use as proxy_auth_token. You can put that in the following
+# configuratino parameter or export to the CONFIGPROXY_AUTH_TOKEN env variable. 
+#
+######################################################################################################
+#
 
 # Loaded from the CONFIGPROXY_AUTH_TOKEN env variable by default.
 c.JupyterHub.proxy_auth_token = '<you put your auth token>'
@@ -65,6 +72,15 @@ c.JupyterHub.proxy_auth_token = '<you put your auth token>'
 # 
 # Should be a subclass of Spawner.
 c.JupyterHub.spawner_class = 'batchspawner.TorqueSpawner'
+
+
+######################################################################################################
+#
+# to generate SSL certificate you may use the following command 
+# $ openssl x509 -req -days 365 -in ca.csr -signkey ca.key -out ca.crt
+#
+######################################################################################################
+
 
 # Path to SSL certificate file for the public facing interface of the proxy
 # 
@@ -81,6 +97,14 @@ c.JupyterHub.ssl_key = '<path to your key file>'
 # increase the time
 c.Spawner.http_timeout = 3000
 
+#
+########################################################################################################
+#
+# to generate API token (for JPY_API_TOKEN) use this command from the same directory where you have the configuratin file
+# $ jupyterhub token <your hpc username> 
+#
+########################################################################################################
+#
 # this is to submit the jupyter notebook job 
 # configure according to your available number of nodes
 # and the queue, I am using the CUDA (gpu)
@@ -96,9 +120,33 @@ c.TorqueSpawner.batch_script = '''
    export LD_LIBRARY_PATH=/public/apps/cuda/7.0/lib64:/public/apps/cuda/7.0/lib:$LD_LIBRARY_PATH
    export CUDA_ROOT=/public/apps/cuda/7.0
    export CUDA_LAUNCH_BLOCKING=0
-   export JPY_API_TOKEN='<your generated api token>'
+   export JPY_API_TOKEN='<your generated api token, instructin below>'
    cd $PBS_O_WORKDIR
 
    {cmd}
    '''
 ```
+
+The configuration is done. Now you have to login to the login-node with the gui enabled secure shell. For mac [XQuartz](https://www.xquartz.org/), windows [MobaXterm] can be used. How to guide can be found [here](https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId=280461906). For the UofM HPC use
+
+```bash
+$ ssh -X <user name>@login1.memphis.edu
+```
+
+then open a browser in backend 
+
+```bash
+$ firefox &
+```
+
+Run the jupyterhub using following command 
+```bash
+$ jupyterhub --config <path to config file/jupyterhub_config.py>
+```
+
+At this stage open http://localhost:8000/ at the browser which you just ran in background (firefox in this example). Login with your HPC username and the password. You are ready to go !!
+
+
+
+
+
