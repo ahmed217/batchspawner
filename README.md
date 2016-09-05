@@ -1,5 +1,5 @@
 #Modified batchspawner for Jupyterhub [![Build Status](https://travis-ci.org/jupyterhub/batchspawner.svg?branch=master)](https://travis-ci.org/jupyterhub/batchspawner)
-This is a custom spawner for Jupyterhub that is designed for installations on clusters using batch scheduling software. This version of batchspawner is specificly modified to work with [University of Memphis](http://www.memphis.edu/hpc/configuration.php) HPC environment.
+This is a custom spawner for Jupyterhub. This version of batchspawner is specificly modified to work with [University of Memphis](http://www.memphis.edu/hpc/configuration.php) HPC environment.
 
 This is the fork of original [batchspawner](https://github.com/jupyterhub/batchspawner). The target HPC has couple features which made batchspawner not function properly. 
 * The login node does not resolve the computing nodes by dns name and computing nodes do not resolve login node as well
