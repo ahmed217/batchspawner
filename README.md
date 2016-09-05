@@ -10,9 +10,9 @@ To address the above features, the modification is made in two places.
 * Instead of dns names, the nodes are represented by their IP address.
 * In the command of job status, we added force option to return XML status. 
 
-This package also includes WrapSpawner and ProfilesSpawner, which provide mechanisms for runtime configuration of spawners. There is no modification yet in this packages. 
+This package also includes WrapSpawner and ProfilesSpawner, which provide mechanisms for runtime configuration of spawners. There is no modification yet in these packages. 
 
-We assume that you have install anaconda with python version > 3.4.2
+We assume that you have installed anaconda or any virtual local environment with python version > 3.4.2
 
 ##Installation
 1. get the package from github 
@@ -22,138 +22,82 @@ We assume that you have install anaconda with python version > 3.4.2
 
 2. from root directory of this repo (where setup.py is), run i
    ```bash 
-   pip install -e  .
+   $ pip install -e  .
    ```
    If you don't actually need an editable version, you can simply run 
       
    ```bash
-   pip install  https://github.com/farukahmedatgithub/batchspawner.git      (it did not work for me)
+   $ pip install  https://github.com/farukahmedatgithub/batchspawner.git      (it did not work for me)
    ```
-
-2. add lines in jupyterhub_config.py for the spawner you intend to use, e.g.
+3. install jupyterhub follow [this](https://github.com/jupyterhub/jupyterhub) 
+4. generate jupyterhub configuration file (default configuration file name is jupyterhub_config.py) 
+   ```bash 
+   jupyterhub --generate-config
+   ```
+5. add or enable lines in jupyterhub_config.py for the spawner you intend to use, e.g.
    
    ```python
-      c = get_config()
       c.JupyterHub.spawner_class = 'batchspawner.TorqueSpawner'
    ```
 3. Depending on the spawner, additional configuration will likely be needed.
 
-##Batch Spawners
+I am posting the configuration here 
 
-###Overview
 
-This file contains an abstraction layer for batch job queueing systems (`BatchSpawnerBase`), and implements
-Jupyterhub spawners for Torque, SLURM, SGE, and eventually others.
-Common attributes of batch submission / resource manager environments will include notions of:
-  * queue names, resource manager addresses
-  * resource limits including runtime, number of processes, memory
-  * singleuser child process running on (usually remote) host not known until runtime
-  * job submission and monitoring via resource manager utilities
-  * remote execution via submission of templated scripts
-  * job names instead of PIDs
+### Example minimum configuration
 
-`BatchSpawnerBase` provides several general mechanisms:
-  * configurable traits `req_foo` that are exposed as `{foo}` in job template scripts
-  * configurable command templates for submitting/querying/cancelling jobs
-  * a generic concept of job-ID and ID-based job state tracking
-  * overrideable hooks for subclasses to plug in logic at numerous points
+```python
 
-###Example
+# Set the log level by value or name.
+c.Application.log_level = 'DEBUG' # 0,10,20.... 
 
-Every effort has been made to accomodate highly diverse systems through configuration 
-only. This example consists of the (lightly edited) configuration used by the author 
-to run Jupyter notebooks on an academic supercomputer cluster.
+# Allows ahead-of-time generation of API tokens for use by services.
+c.JupyterHub.api_tokens = {'<put your token>':'<put your hpc user name>'}
 
-   ```python
-   # Select the Torque backend and increase the timeout since batch jobs may take time to start
-   c.JupyterHub.spawner_class = 'batchspawner.TorqueSpawner'
-   c.Spawner.http_timeout = 120
-   
-   #------------------------------------------------------------------------------
-   # BatchSpawnerBase configuration
-   #    These are simply setting parameters used in the job script template below
-   #------------------------------------------------------------------------------
-   c.BatchSpawnerBase.req_nprocs = '2'
-   c.BatchSpawnerBase.req_queue = 'mesabi'
-   c.BatchSpawnerBase.req_host = 'mesabi.xyz.edu'
-   c.BatchSpawnerBase.req_runtime = '12:00:00'
-   c.BatchSpawnerBase.req_memory = '4gb'
-   #------------------------------------------------------------------------------
-   # TorqueSpawner configuration
-   #    The script below is nearly identical to the default template, but we needed
-   #    to add a line for our local environment. For most sites the default templates
-   #    should be a good starting point.
-   #------------------------------------------------------------------------------
-   c.TorqueSpawner.batch_script = '''#!/bin/sh
-   #PBS -q {queue}@{host}
-   #PBS -l walltime={runtime}
-   #PBS -l nodes=1:ppn={nprocs}
-   #PBS -l mem={memory}
-   #PBS -N jupyterhub-singleuser
-   #PBS -v {keepvars}
-   module load python3
+# The ip for this process
+c.JupyterHub.hub_ip = 'xx.xx.xx.xx' # put your login node ip which is facing towards the computing node
+
+# Loaded from the CONFIGPROXY_AUTH_TOKEN env variable by default.
+c.JupyterHub.proxy_auth_token = '<you put your auth token>'
+
+# The class to use for spawning single-user servers.
+# 
+# Should be a subclass of Spawner.
+c.JupyterHub.spawner_class = 'batchspawner.TorqueSpawner'
+
+# Path to SSL certificate file for the public facing interface of the proxy
+# 
+# Use with ssl_key
+c.JupyterHub.ssl_cert = '<path to your crt file>'
+
+# Path to SSL key file for the public facing interface of the proxy
+# 
+# Use with ssl_cert
+c.JupyterHub.ssl_key = '<path to your key file>'
+
+# Once a server has successfully been spawned, this is the amount of time we
+# wait before assuming that the server is unable to accept connections.
+# increase the time
+c.Spawner.http_timeout = 3000
+
+# this is to submit the jupyter notebook job 
+# configure according to your available number of nodes
+# and the queue, I am using the CUDA (gpu)
+c.TorqueSpawner.batch_script = '''
+   #!/bin/sh
+   #PBS -l nodes=1:CUDA:ppn=24
+   #PBS -M <your email> 
+   #PBS -m abe
+
+   export CXX=/public/apps/gcc/4.4.7
+   export PATH="/public/apps/cuda/7.0/bin:$PATH"
+   export LD_LIBRARY_PATH="/usr/local/lib:/usr/lib:/home/mfahmed/anaconda3/lib:$PATH"
+   export LD_LIBRARY_PATH=/public/apps/cuda/7.0/lib64:/public/apps/cuda/7.0/lib:$LD_LIBRARY_PATH
+   export CUDA_ROOT=/public/apps/cuda/7.0
+   export CUDA_LAUNCH_BLOCKING=0
+   export JPY_API_TOKEN='<your generated api token>'
+   cd $PBS_O_WORKDIR
+
    {cmd}
    '''
-   # For our site we need to munge the execution hostname returned by qstat
-   c.TorqueSpawner.state_exechost_exp = r'int-\1.mesabi.xyz.edu'
-   ```
-
-##Wrapper and Profile Spawners
-
-###Overview
-
-`WrapSpawner` provides a mechanism to wrap the interface of a Spawner such that
-the Spawner class to use for single-user servers can be chosen dynamically.
-Subclasses may modify the class or properties of the child Spawner at any point
-before start() is called (e.g. from Authenticator pre_spawn hooks or options form 
-processing) and that state will be preserved on restart. The start/stop/poll
-methods are not real coroutines, but simply pass through the Futures returned
-by the wrapped Spawner class.
-
-`ProfilesSpawner` leverages the `Spawner` options form feature to allow user-driven
-configuration of Spawner classes while permitting:
-   * configuration of Spawner classes that don't natively implement options_form
-   * administrator control of allowed configuration changes
-   * runtime choice of which Spawner backend to launch
-
-###Example
-
-The following is based on the author's configuration (at the same site as the example above)
-showing how to give users access to multiple job configurations on the batch scheduled
-clusters, as well as an option to run a local notebook directly on the jupyterhub server.
-
-   ```python
-   # Same initial setup as the previous example
-   c.JupyterHub.spawner_class = 'batchspawner.ProfilesSpawner'
-   c.Spawner.http_timeout = 120
-   #------------------------------------------------------------------------------
-   # BatchSpawnerBase configuration
-   #   Providing default values that we may omit in the profiles
-   #------------------------------------------------------------------------------
-   c.BatchSpawnerBase.req_host = 'mesabi.xyz.edu'
-   c.BatchSpawnerBase.req_runtime = '12:00:00'
-   c.TorqueSpawner.state_exechost_exp = r'in-\1.mesabi.xyz.edu'
-   #------------------------------------------------------------------------------
-   # ProfilesSpawner configuration
-   #------------------------------------------------------------------------------
-   # List of profiles to offer for selection. Signature is:
-   #   List(Tuple( Unicode, Unicode, Type(Spawner), Dict ))
-   # corresponding to profile display name, unique key, Spawner class,
-   # dictionary of spawner config options.
-   # 
-   # The first three values will be exposed in the input_template as {display},
-   # {key}, and {type}
-   #
-   c.ProfilesSpawner.profiles = [
-      ( "Local server", 'local', 'jupyterhub.spawner.LocalProcessSpawner', {'ip':'0.0.0.0'} ),
-      ('Mesabi - 2 cores, 4 GB, 8 hours', 'mesabi2c4g12h', 'batchspawner.TorqueSpawner',
-         dict(req_nprocs='2', req_queue='mesabi', req_runtime='8:00:00', req_memory='4gb')),
-      ('Mesabi - 12 cores, 128 GB, 4 hours', 'mesabi128gb', 'batchspawner.TorqueSpawner',
-         dict(req_nprocs='12', req_queue='ram256g', req_runtime='4:00:00', req_memory='125gb')),
-      ('Mesabi - 2 cores, 4 GB, 24 hours', 'mesabi2c4gb24h', 'batchspawner.TorqueSpawner',
-         dict(req_nprocs='2', req_queue='mesabi', req_runtime='24:00:00', req_memory='4gb')),
-      ('Interactive Cluster - 2 cores, 4 GB, 8 hours', 'lab', 'batchspawner.TorqueSpawner',
-         dict(req_nprocs='2', req_host='labhost.xyz.edu', req_queue='lab',
-             req_runtime='8:00:00', req_memory='4gb', state_exechost_exp='')),
-      ]
-   ```
+```
