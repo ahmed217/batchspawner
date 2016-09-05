@@ -1,9 +1,15 @@
-#batchspawner for Jupyterhub [![Build Status](https://travis-ci.org/jupyterhub/batchspawner.svg?branch=master)](https://travis-ci.org/jupyterhub/batchspawner)
-This is a custom spawner for Jupyterhub that is designed for installations on clusters using batch scheduling software.
+#Modified batchspawner for Jupyterhub [![Build Status](https://travis-ci.org/jupyterhub/batchspawner.svg?branch=master)](https://travis-ci.org/jupyterhub/batchspawner)
+This is a custom spawner for Jupyterhub that is designed for installations on clusters using batch scheduling software. This version of batchspawner is specificly modified to work with [University of Memphis](http://www.memphis.edu/hpc/configuration.php) HPC environment.
 
-This began as a generalization of [mkgilbert's batchspawner](https://github.com/mkgilbert/slurmspawner) which in turn was inspired by [Andrea Zonca's blog post](http://zonca.github.io/2015/04/jupyterhub-hpc.html 'Run jupyterhub on a Supercomputer') where he explains his implementation for a spawner that uses SSH and Torque. His github repo is found [here](http://www.github.com/zonca/remotespawner 'RemoteSpawner').
+This is fork of original [batchspawner](https://github.com/jupyterhub/batchspawner). The target HPC has couple features which made batchspawner not function properly. 
+* The login node does not resolve the computing nodes by dns name and computing nodes do not resolve login node as well
+* The login node and the computing node does not return the job status in XML format, but batchspawner looks for XML  
 
-This package also includes WrapSpawner and ProfilesSpawner, which provide mechanisms for runtime configuration of spawners.  The inspiration for their development was to allow users to select from a range of pre-defined batch job profiles, but their operation is completely generic.
+To address the above features, the modification is made in two places. 
+* Instead of dns names, the nodes are represented by their IP address.
+* In the command of job status, we added force option to return XML status 
+
+This package also includes WrapSpawner and ProfilesSpawner, which provide mechanisms for runtime configuration of spawners. There is no modification yet in this packages. 
 
 ##Installation
 1. from root directory of this repo (where setup.py is), run `pip install -e .`
