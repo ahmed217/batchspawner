@@ -20,7 +20,7 @@ We assume that you have installed anaconda or any virtual local environment with
    $ git clone git@github.com:farukahmedatgithub/batchspawner.git
    ```
 
-2. from root directory of this repo (where setup.py is), run i
+2. from root directory of this repo (where setup.py is), run 
    ```bash 
    $ pip install -e  .
    ```
@@ -29,10 +29,10 @@ We assume that you have installed anaconda or any virtual local environment with
    ```bash
    $ pip install  https://github.com/farukahmedatgithub/batchspawner.git      (it did not work for me)
    ```
-3. install jupyterhub follow [this](https://github.com/jupyterhub/jupyterhub) 
-4. generate jupyterhub configuration file (default configuration file name is jupyterhub_config.py) 
+3. install jupyterhub from [this link](https://github.com/jupyterhub/jupyterhub) 
+4. generate jupyterhub configuration file (default configuration file name is jupyterhub_config.py)
    ```bash 
-   jupyterhub --generate-config
+   $ jupyterhub --generate-config
    ```
 5. add or enable lines in jupyterhub_config.py for the spawner you intend to use, e.g.
    
