@@ -15,7 +15,7 @@ This package also includes WrapSpawner and ProfilesSpawner, which provide mechan
 We assume that you have installed anaconda or any virtual local environment with python version > 3.4.2
 
 ##Installation
-1. install jupyterhub from [this link](https://github.com/jdfreder/multiuser-server/blob/master/docs/getting-started.md). The project home is [here]https://github.com/jupyterhub/jupyterhub) 
+1. install jupyterhub from [this link](https://github.com/jdfreder/multiuser-server/blob/master/docs/getting-started.md). The project home is [here](https://github.com/jupyterhub/jupyterhub) 
 2. generate jupyterhub configuration file (default configuration file name is jupyterhub_config.py)
    
    ```bash 
