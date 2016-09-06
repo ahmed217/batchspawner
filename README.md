@@ -1,4 +1,4 @@
-#Modified batchspawner for Jupyterhub [![Build Status](https://travis-ci.org/jupyterhub/batchspawner.svg?branch=master)](https://travis-ci.org/jupyterhub/batchspawner)
+#Modified batchspawner for Jupyterhub (UofM) [![Build Status](https://travis-ci.org/jupyterhub/batchspawner.svg?branch=master)](https://travis-ci.org/jupyterhub/batchspawner)
 This is a custom spawner for Jupyterhub. This version of batchspawner is specificly modified to work with [University of Memphis](http://www.memphis.edu/hpc/configuration.php) HPC environment.
 
 This is the fork of original [batchspawner](https://github.com/jupyterhub/batchspawner). The target HPC has couple features which made batchspawner not function properly. 
