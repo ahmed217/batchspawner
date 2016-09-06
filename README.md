@@ -79,7 +79,10 @@ c.JupyterHub.spawner_class = 'batchspawner.TorqueSpawner'
 
 ######################################################################################################
 #
-# to generate SSL certificate you may use the following command 
+# to generate SSL certificate you may use the following series of commands 
+#  
+# $ openssl genrsa -out ca.key 2048 
+# $ openssl req -new -key ca.key -out ca.csr
 # $ openssl x509 -req -days 365 -in ca.csr -signkey ca.key -out ca.crt
 #
 ######################################################################################################
