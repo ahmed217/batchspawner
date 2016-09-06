@@ -16,6 +16,7 @@ We assume that you have installed anaconda or any virtual local environment with
 
 ##Installation
 1. install jupyterhub (follow Prerequisites and Installation from [here](https://github.com/jupyterhub/jupyterhub). Getting started guide of jupyterhub is [here](https://github.com/jdfreder/multiuser-server/blob/master/docs/getting-started.md). 
+   
    a. use this command if you have conda environment otherwise use your environment specific installer (apt-get, yum etc.)
    ```bash
    conda instal nodejs
