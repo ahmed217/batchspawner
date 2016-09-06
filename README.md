@@ -157,7 +157,7 @@ Run the jupyterhub using following command
 $ jupyterhub --config <path to config file/jupyterhub_config.py>
 ```
 
-At this stage open https://localhost:<port>/ (note https://) at the browser which you just ran in background (firefox in this example). Login with your HPC username and the password. You are ready to go !!
+At this stage open https://localhost:\<port\>/ (note https://) at the browser which you just ran in background (firefox in this example). Login with your HPC username and the password. You are ready to go !!
 
 If you see it is complaining about port is in use, then you may change the port number. 
 
