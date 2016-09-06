@@ -24,7 +24,7 @@ We assume that you have installed anaconda or any virtual local environment with
 
 3. get the package *batchspawner* from github 
    ```bash 
-   $ git clone git@github.com:farukahmedatgithub/batchspawner.git
+   $ git clone https://github.com/farukahmedatgithub/batchspawner.git
    ```
 
 4. from root directory of this *batchspawner* (where setup.py is), run 
