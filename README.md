@@ -15,7 +15,18 @@ This package also includes WrapSpawner and ProfilesSpawner, which provide mechan
 We assume that you have installed anaconda or any virtual local environment with python version > 3.4.2
 
 ##Installation
-1. install jupyterhub from [this link](https://github.com/jdfreder/multiuser-server/blob/master/docs/getting-started.md). The project home is [here](https://github.com/jupyterhub/jupyterhub) 
+1. install jupyterhub (follow Prerequisites and Installation from [here](https://github.com/jupyterhub/jupyterhub). Getting started guide of jupyterhub is [here](https://github.com/jdfreder/multiuser-server/blob/master/docs/getting-started.md). 
+   a. use this command if you have conda environment otherwise use your environment specific installer (apt-get, yum etc.)
+   ```bash
+   conda instal nodejs
+   ```
+
+   b. then  install the configurable-http-proxy
+   ```bash
+   npm install -g configurable-http-proxy
+   pip3 install jupyterhub 
+   ```
+ 
 2. generate jupyterhub configuration file (default configuration file name is jupyterhub_config.py)
    
    ```bash 
@@ -63,7 +74,7 @@ c.JupyterHub.hub_ip = 'xx.xx.xx.xx' # put your login node ip which is facing tow
 #
 # you may generate a longer random string and use as proxy_auth_token. You can put that in the following
 # configuratino parameter or export to the CONFIGPROXY_AUTH_TOKEN env variable. 
-# or use this command 
+# use this command 
 # $ export CONFIGPROXY_AUTH_TOKEN=`openssl rand -hex 32`
 ######################################################################################################
 #
@@ -152,9 +163,22 @@ Run the jupyterhub using following command
 $ jupyterhub --config <path to config file/jupyterhub_config.py>
 ```
 
-At this stage open https://localhost:8000/ (note https://) at the browser which you just ran in background (firefox in this example). Login with your HPC username and the password. You are ready to go !!
+At this stage open https://localhost:<port>/ (note https://) at the browser which you just ran in background (firefox in this example). Login with your HPC username and the password. You are ready to go !!
 
+If you see it is complaining about port is in use, then you may change the port number. 
 
+```python
 
+# The public facing port of the proxy
+c.JupyterHub.port = 8000 
+# use some higher ports 
+
+# The port for this process
+c.JupyterHub.hub_port = 8081
+# use some higher ports 
+
+```
+
+Note: there should be one jupyterhub running in the login node. 
 
 
