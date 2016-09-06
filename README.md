@@ -72,16 +72,14 @@ c.JupyterHub.hub_ip = 'xx.xx.xx.xx' # put your login node ip which is facing tow
 
 #
 ######################################################################################################
-#
-# you may generate a longer random string and use as proxy_auth_token. You can put that in the following
-# configuratino parameter or export to the CONFIGPROXY_AUTH_TOKEN env variable. 
-# use this command 
+# use this command to set the CONFIGPROXY_AUTH_TOKEN 
 # $ export CONFIGPROXY_AUTH_TOKEN=`openssl rand -hex 32`
 ######################################################################################################
 #
 
 # Loaded from the CONFIGPROXY_AUTH_TOKEN env variable by default.
-c.JupyterHub.proxy_auth_token = '<you put your auth token>'
+# c.JupyterHub.proxy_auth_token = '<you put your auth token>'
+# if you have exported the CONFIG.... env variable, then no need to use above config
 
 # The class to use for spawning single-user servers.
 # 
@@ -117,11 +115,7 @@ c.Spawner.http_timeout = 3000
 
 #
 ########################################################################################################
-#
-# to generate API token (for JPY_API_TOKEN) use this command from the same directory where you have the configuratin file
-# $ jupyterhub token <your hpc username> 
-#
-# to export this API token use 
+# To export the API token use 
 # $ export JPY_COOKIE_SECRET=`openssl rand -hex 1024`
 ########################################################################################################
 #
@@ -136,11 +130,10 @@ c.TorqueSpawner.batch_script = '''
 
    export CXX=/public/apps/gcc/4.4.7
    export PATH="/public/apps/cuda/7.0/bin:$PATH"
-   export LD_LIBRARY_PATH="/usr/local/lib:/usr/lib:/home/mfahmed/anaconda3/lib:$PATH"
+   export LD_LIBRARY_PATH="/usr/local/lib:/usr/lib:/home/<your username>/anaconda3/lib:$PATH"
    export LD_LIBRARY_PATH=/public/apps/cuda/7.0/lib64:/public/apps/cuda/7.0/lib:$LD_LIBRARY_PATH
    export CUDA_ROOT=/public/apps/cuda/7.0
    export CUDA_LAUNCH_BLOCKING=0
-   export JPY_API_TOKEN='<your generated api token, instructin below>'
    cd $PBS_O_WORKDIR
 
    {cmd}
