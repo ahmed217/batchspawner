@@ -15,12 +15,19 @@ This package also includes WrapSpawner and ProfilesSpawner, which provide mechan
 We assume that you have installed anaconda or any virtual local environment with python version > 3.4.2
 
 ##Installation
-1. get the package from github 
+1. install jupyterhub from [this link](https://github.com/jupyterhub/jupyterhub) 
+2. generate jupyterhub configuration file (default configuration file name is jupyterhub_config.py)
+   
+   ```bash 
+   $ jupyterhub --generate-config
+   ```
+
+3. get the package *batchspawner* from github 
    ```bash 
    $ git clone git@github.com:farukahmedatgithub/batchspawner.git
    ```
 
-2. from root directory of this repo (where setup.py is), run 
+4. from root directory of this *batchspawner* (where setup.py is), run 
    ```bash 
    $ pip install -e  .
    ```
@@ -29,18 +36,13 @@ We assume that you have installed anaconda or any virtual local environment with
    ```bash
    $ pip install  https://github.com/farukahmedatgithub/batchspawner.git      (it did not work for me)
    ```
-3. install jupyterhub from [this link](https://github.com/jupyterhub/jupyterhub) 
-4. generate jupyterhub configuration file (default configuration file name is jupyterhub_config.py)
-   
-   ```bash 
-   $ jupyterhub --generate-config
-   ```
 5. add or enable lines in jupyterhub_config.py for the spawner you intend to use, e.g.
    
    ```python
       c.JupyterHub.spawner_class = 'batchspawner.TorqueSpawner'
    ```
-3. Depending on the spawner, additional configuration will likely be needed.
+
+6. Depending on the spawner, additional configuration will likely be needed.
 
 
 Here is the minimum example configuration given. You can copy and save it as jupyterhub_config.py file. For other configuratin parameters it will use the defaults. 
@@ -61,7 +63,8 @@ c.JupyterHub.hub_ip = 'xx.xx.xx.xx' # put your login node ip which is facing tow
 #
 # you may generate a longer random string and use as proxy_auth_token. You can put that in the following
 # configuratino parameter or export to the CONFIGPROXY_AUTH_TOKEN env variable. 
-#
+# or use this command 
+# $ export CONFIGPROXY_AUTH_TOKEN=`openssl rand -hex 32`
 ######################################################################################################
 #
 
@@ -103,6 +106,8 @@ c.Spawner.http_timeout = 3000
 # to generate API token (for JPY_API_TOKEN) use this command from the same directory where you have the configuratin file
 # $ jupyterhub token <your hpc username> 
 #
+# to export this API token use 
+# $ export JPY_COOKIE_SECRET=`openssl rand -hex 1024`
 ########################################################################################################
 #
 # this is to submit the jupyter notebook job 
