@@ -1,4 +1,4 @@
-#Modified batchspawner for Jupyterhub (UofM) [![Build Status](https://travis-ci.org/jupyterhub/batchspawner.svg?branch=master)](https://travis-ci.org/jupyterhub/batchspawner)
+# Modified batchspawner for Jupyterhub (UofM) [![Build Status](https://travis-ci.org/jupyterhub/batchspawner.svg?branch=master)](https://travis-ci.org/jupyterhub/batchspawner)
 This is a custom spawner for Jupyterhub. This version of batchspawner is specificly modified to work with [University of Memphis](http://www.memphis.edu/hpc/configuration.php) HPC environment.
 
 This is the fork of original [batchspawner](https://github.com/jupyterhub/batchspawner). The target HPC has couple features which made batchspawner not function properly. 
@@ -14,7 +14,7 @@ This package also includes WrapSpawner and ProfilesSpawner, which provide mechan
 
 We assume that you have installed anaconda or any virtual local environment with python version > 3.4.2
 
-##Installation
+## Installation
 1. install jupyterhub (follow Prerequisites and Installation from [here](https://github.com/jupyterhub/jupyterhub). Getting started guide of jupyterhub is [here](https://github.com/jdfreder/multiuser-server/blob/master/docs/getting-started.md). 
    
    a. use this command if you have conda environment otherwise use your environment specific installer (apt-get, yum etc.)
